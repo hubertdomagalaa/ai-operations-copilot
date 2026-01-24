@@ -62,21 +62,44 @@ async def knowledge_node(state: TicketProcessingState) -> TicketProcessingState:
     
     Retrieves relevant documents via RAG.
     
-    TODO: Implement node logic
+    WHY THIS NODE EXISTS:
+    - Provides grounded context for downstream agents
+    - All facts must be traceable to sources
+    - No retrieval = no answer principle
     """
-    # TODO: Import and instantiate knowledge agent
-    # from agents.knowledge import KnowledgeAgent
-    # agent = KnowledgeAgent()
+    from agents.knowledge import KnowledgeAgent
     
     state["current_step"] = "knowledge"
+    state["status"] = "running"
     state["updated_at"] = datetime.utcnow().isoformat()
     
-    # TODO: Call agent
-    # result = await agent.run(state)
-    
-    # TODO: Update state with result
-    # state["knowledge_output"] = result
-    # state["retrieved_documents"] = result.get("documents", [])
+    try:
+        # Instantiate and run knowledge agent
+        agent = KnowledgeAgent()
+        result = await agent.process(state)
+        
+        # Update state with agent output
+        state["knowledge_output"] = result
+        
+        # Extract retrieved documents for easy access
+        if result.get("success") and result.get("result"):
+            state["retrieved_documents"] = result["result"].get("documents", [])
+        else:
+            state["retrieved_documents"] = []
+        
+        # TODO: Log retrieval metrics for observability
+        
+    except Exception as e:
+        # Log error but don't fail workflow
+        # Knowledge retrieval is important but not blocking
+        state["knowledge_output"] = {
+            "success": False,
+            "agent_type": "knowledge",
+            "error": str(e),
+        }
+        state["retrieved_documents"] = []
+        # TODO: Log error properly
+        print(f"Knowledge agent error: {e}")
     
     return state
 

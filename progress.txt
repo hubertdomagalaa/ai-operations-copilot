@@ -5,54 +5,55 @@ Read this file at the start of each session to understand current state.
 
 ---
 
+## Session 3 — 2024-01-24 — RAG Foundation Implementation
+
+### Completed
+- Created complete RAG package at `/backend/services/rag/`
+  - `ingestion.py`: Document loading with metadata preservation
+  - `chunking.py`: Fixed-size chunks (512 chars, 64 overlap) with rationale
+  - `embeddings.py`: Provider-agnostic interface with local TF-IDF
+  - `store.py`: In-memory vector store with cosine similarity
+  - `retrieval.py`: RAGPipeline with citation support
+- Updated KnowledgeAgent at `/agents/knowledge/__init__.py`
+  - Full RAG integration
+  - Confidence scoring based on retrieval quality
+  - Human review triggers for low confidence
+  - Citation formatting for grounding
+- Updated knowledge_node in workflow
+- Added sample documents at `/data/documents/`
+  - api_docs/authentication.md
+  - api_docs/user_management.md
+  - runbooks/troubleshooting_auth_errors.md
+
+### Design Decisions
+- Chunk size 512 chars: Balances precision with context sufficiency
+- Chunk overlap 64 chars: Prevents boundary information loss
+- Local TF-IDF embeddings: No external dependencies for development
+- In-memory store: Simple, fast, replaceable with production store
+
+### Current State
+- RAG pipeline is COMPLETE and integrated
+- KnowledgeAgent can retrieve grounded context
+- Sample documents ready for testing
+- No downstream logic depends on unfinished work
+
+### Next Steps (Future Sessions)
+1. Implement TriageAgent with LLM classification
+2. Implement DecisionAgent with recommendation logic
+3. Implement ActionAgent for response drafting
+4. Add OpenAI embedding provider
+5. Replace in-memory store with persistent store
+6. Add RAG evaluation metrics
+
+---
+
 ## Session 2 — 2024-01-24 — LangGraph Workflow Implementation
 
 ### Completed
-- Implemented complete LangGraph workflow skeleton in `/orchestration/langgraph/workflow.py`
-  - StateGraph construction with explicit typing
-  - 8 workflow nodes: triage, knowledge, decision, action, human_review, monitoring, complete, error
-  - 3 conditional edge functions for routing decisions
-  - Checkpointing support via MemorySaver for human-in-the-loop
-  - Async run_workflow() and resume_workflow() entry points
-  - get_workflow_status() for querying paused workflows
-- Added monitoring_node to `/orchestration/langgraph/nodes.py`
-  - Records metrics, logs, evaluation data
-  - Runs after action, before complete
-- Updated state schema in `/orchestration/langgraph/state.py`
-  - Added monitoring_output field
-- All workflow files now have executable code (not just TODOs)
-
-### Current State
-- LangGraph workflow skeleton is COMPLETE
-- Workflow is structurally executable but agents return pass-through state
-- Ready for agent implementation (LLM calls, RAG retrieval)
-
-### Workflow Structure
-```
-START → triage 
-           ↓
-    [route_after_triage]
-           ├── knowledge → decision
-           │                   ↓
-           │           [route_after_decision]
-           │                   ├── action → monitoring → complete → END
-           │                   └── human_review
-           │                           ↓
-           │                   [route_after_human]
-           │                           ├── action → monitoring → complete → END
-           │                           ├── complete → END
-           │                           └── cancel → END
-           ├── escalate → human_review → ...
-           └── error → END
-```
-
-### Next Steps (Future Sessions)
-1. Install LangGraph: `pip install langgraph`
-2. Implement triage agent with LLM classification
-3. Set up vector store for knowledge agent
-4. Add structured output parsing
-5. Implement human-in-the-loop API endpoints
-6. Add proper error handling in nodes
+- Implemented complete LangGraph workflow skeleton
+- 8 workflow nodes with conditional edges
+- Checkpointing via MemorySaver
+- Async run_workflow() and resume_workflow()
 
 ---
 
@@ -60,11 +61,8 @@ START → triage
 
 ### Completed
 - Created full repository structure
-- Created backend API skeleton (FastAPI)
-- Created agent definitions (5 agents)
-- Created initial LangGraph skeleton (TODOs only)
-- Created observability and evaluation scaffolding
-- Created documentation
+- Backend, agents, orchestration scaffolding
+- Documentation and configuration files
 
 ---
 
