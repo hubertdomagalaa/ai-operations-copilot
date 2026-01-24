@@ -5,61 +5,66 @@ Read this file at the start of each session to understand current state.
 
 ---
 
+## Session 2 — 2024-01-24 — LangGraph Workflow Implementation
+
+### Completed
+- Implemented complete LangGraph workflow skeleton in `/orchestration/langgraph/workflow.py`
+  - StateGraph construction with explicit typing
+  - 8 workflow nodes: triage, knowledge, decision, action, human_review, monitoring, complete, error
+  - 3 conditional edge functions for routing decisions
+  - Checkpointing support via MemorySaver for human-in-the-loop
+  - Async run_workflow() and resume_workflow() entry points
+  - get_workflow_status() for querying paused workflows
+- Added monitoring_node to `/orchestration/langgraph/nodes.py`
+  - Records metrics, logs, evaluation data
+  - Runs after action, before complete
+- Updated state schema in `/orchestration/langgraph/state.py`
+  - Added monitoring_output field
+- All workflow files now have executable code (not just TODOs)
+
+### Current State
+- LangGraph workflow skeleton is COMPLETE
+- Workflow is structurally executable but agents return pass-through state
+- Ready for agent implementation (LLM calls, RAG retrieval)
+
+### Workflow Structure
+```
+START → triage 
+           ↓
+    [route_after_triage]
+           ├── knowledge → decision
+           │                   ↓
+           │           [route_after_decision]
+           │                   ├── action → monitoring → complete → END
+           │                   └── human_review
+           │                           ↓
+           │                   [route_after_human]
+           │                           ├── action → monitoring → complete → END
+           │                           ├── complete → END
+           │                           └── cancel → END
+           ├── escalate → human_review → ...
+           └── error → END
+```
+
+### Next Steps (Future Sessions)
+1. Install LangGraph: `pip install langgraph`
+2. Implement triage agent with LLM classification
+3. Set up vector store for knowledge agent
+4. Add structured output parsing
+5. Implement human-in-the-loop API endpoints
+6. Add proper error handling in nodes
+
+---
+
 ## Session 1 — 2024-01-24 — Initial Bootstrap
 
 ### Completed
 - Created full repository structure
 - Created backend API skeleton (FastAPI)
-  - API routes: tickets, agents, health
-  - Core: config, exceptions
-  - Schemas: ticket, agent, workflow
-  - Services: llm, vector_store abstractions
-- Created agent definitions
-  - Base agent class
-  - Triage agent (classification, prioritization)
-  - Knowledge agent (RAG retrieval)
-  - Decision agent (action recommendation)
-  - Action agent (response drafting)
-  - Monitoring agent (system health)
-- Created LangGraph orchestration
-  - TypedDict state definition
-  - Workflow nodes
-  - Conditional edge routing
-  - Main workflow graph structure
-- Created data directories
-  - tickets/, documents/, logs/ with READMEs
-- Created observability skeleton
-  - Distributed tracing framework
-  - Metrics collection (counters, gauges, histograms)
-- Created evaluation skeleton
-  - Evaluators for classification, retrieval, response quality
-- Created tests scaffolding
-  - pytest configuration with fixtures
-  - Unit tests for agents and workflow
-  - Integration tests for API
+- Created agent definitions (5 agents)
+- Created initial LangGraph skeleton (TODOs only)
+- Created observability and evaluation scaffolding
 - Created documentation
-  - system_overview.md
-  - architecture.md
-  - agents.md
-  - data_flow.md
-
-### Current State
-- Repository skeleton is COMPLETE
-- All files contain clear docstrings and TODO markers
-- No business logic implemented yet
-- Ready for implementation phase
-
-### Next Steps (Future Sessions)
-1. Install dependencies (langgraph, langchain, fastapi, pydantic)
-2. Implement triage agent classification logic
-3. Set up vector store for RAG
-4. Implement knowledge agent retrieval
-5. Implement decision agent with human-in-the-loop
-6. Implement action agent response drafting
-7. Wire up full workflow
-8. Add authentication to API
-9. Set up CI/CD
-10. Add production logging infrastructure
 
 ---
 

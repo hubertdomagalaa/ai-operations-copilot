@@ -58,6 +58,7 @@ class TicketProcessingState(TypedDict):
     knowledge_output: Optional[Dict[str, Any]]
     decision_output: Optional[Dict[str, Any]]
     action_output: Optional[Dict[str, Any]]
+    monitoring_output: Optional[Dict[str, Any]]  # Metrics and evaluation data
     
     # === Retrieved Knowledge ===
     retrieved_documents: Optional[List[Dict[str, Any]]]
@@ -103,6 +104,7 @@ def create_initial_state(
         knowledge_output=None,
         decision_output=None,
         action_output=None,
+        monitoring_output=None,
         
         # Knowledge
         retrieved_documents=None,

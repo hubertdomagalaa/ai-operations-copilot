@@ -130,6 +130,55 @@ async def action_node(state: TicketProcessingState) -> TicketProcessingState:
     return state
 
 
+async def monitoring_node(state: TicketProcessingState) -> TicketProcessingState:
+    """
+    Node that records metrics, logs, and evaluation hooks.
+    
+    This node runs after action and before completion.
+    It captures data for observability and system improvement.
+    
+    RESPONSIBILITIES:
+    - Record workflow timing metrics
+    - Log agent confidence scores
+    - Capture data for evaluation pipeline
+    - Emit events for dashboards
+    
+    WHY THIS NODE EXISTS:
+    - Observability is a first-class concern
+    - Need to measure and improve AI quality
+    - Compliance and audit trail requirements
+    
+    TODO: Implement monitoring logic
+    """
+    state["current_step"] = "monitoring"
+    state["updated_at"] = datetime.utcnow().isoformat()
+    
+    # TODO: Calculate workflow duration
+    # started = datetime.fromisoformat(state["started_at"])
+    # duration_ms = (datetime.utcnow() - started).total_seconds() * 1000
+    
+    # TODO: Record metrics
+    # from observability.metrics import workflow_duration, agent_confidence
+    # workflow_duration.observe(duration_ms / 1000, {"status": state["status"]})
+    
+    # TODO: Log confidence scores from each agent
+    # if state.get("triage_output"):
+    #     confidence = state["triage_output"].get("confidence", 0)
+    #     agent_confidence.observe(confidence, {"agent_type": "triage"})
+    
+    # TODO: Emit evaluation event
+    # This data will be used for quality monitoring
+    # evaluation_event = {
+    #     "ticket_id": state["ticket_id"],
+    #     "trace_id": state["trace_id"],
+    #     "triage_confidence": state.get("triage_output", {}).get("confidence"),
+    #     "decision_confidence": state.get("decision_output", {}).get("confidence"),
+    #     "human_override": state.get("human_decision") is not None,
+    # }
+    
+    return state
+
+
 async def human_review_node(state: TicketProcessingState) -> TicketProcessingState:
     """
     Node that pauses workflow for human review.
