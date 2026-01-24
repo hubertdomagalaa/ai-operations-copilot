@@ -108,23 +108,44 @@ async def decision_node(state: TicketProcessingState) -> TicketProcessingState:
     """
     Node that invokes the decision agent.
     
-    Determines recommended action.
+    Synthesizes triage + knowledge signals to produce a recommendation.
     
-    TODO: Implement node logic
+    WHY THIS NODE EXISTS:
+    - Combines upstream signals into actionable recommendation
+    - Determines if human approval is required
+    - Sets human_decision_required flag for routing
     """
-    # TODO: Import and instantiate decision agent
-    # from agents.decision import DecisionAgent
-    # agent = DecisionAgent()
+    from agents.decision import DecisionAgent
     
     state["current_step"] = "decision"
+    state["status"] = "running"
     state["updated_at"] = datetime.utcnow().isoformat()
     
-    # TODO: Call agent
-    # result = await agent.run(state)
-    
-    # TODO: Update state with result
-    # state["decision_output"] = result
-    # state["human_decision_required"] = result.get("requires_human_review", False)
+    try:
+        # Instantiate and run decision agent
+        agent = DecisionAgent()
+        result = await agent.process(state)
+        
+        # Update state with decision output
+        state["decision_output"] = result
+        
+        # Set human_decision_required based on agent output
+        # This flag drives the route_after_decision routing
+        requires_approval = result.get("requires_human_review", True)
+        state["human_decision_required"] = requires_approval
+        
+        # TODO: Log decision metrics for observability
+        
+    except Exception as e:
+        # Decision failed — require human review as fallback
+        state["decision_output"] = {
+            "success": False,
+            "agent_type": "decision",
+            "error": str(e),
+        }
+        state["human_decision_required"] = True
+        # TODO: Log error properly
+        print(f"Decision agent error: {e}")
     
     return state
 
@@ -204,19 +225,50 @@ async def monitoring_node(state: TicketProcessingState) -> TicketProcessingState
 
 async def human_review_node(state: TicketProcessingState) -> TicketProcessingState:
     """
-    Node that pauses workflow for human review.
+    Human-in-the-loop checkpoint node.
     
-    This is a checkpoint — workflow will wait here until
-    human provides decision via API.
+    WHY THIS NODE EXISTS:
+    - AI assists decisions; it does not replace human judgment
+    - Human approval is MANDATORY before any action execution
+    - This is not optional — it's a core system principle
     
-    TODO: Implement human review logic
+    WORKFLOW BEHAVIOR:
+    - This node sets status to 'paused_for_human'
+    - LangGraph checkpointing preserves state
+    - Workflow resumes when human provides decision via API
+    - Human can: approve, modify, handle manually, or cancel
+    
+    WHAT GETS EXPOSED TO HUMAN:
+    - Ticket content
+    - Triage classification
+    - Retrieved documents (with citations)
+    - Decision recommendation with reasoning
+    - Risk flags
     """
     state["current_step"] = "human_review"
     state["status"] = "paused_for_human"
     state["updated_at"] = datetime.utcnow().isoformat()
     
-    # TODO: Emit event for notification
-    # TODO: Persist state for later resumption
+    # Build summary for human operator
+    decision_output = state.get("decision_output", {})
+    decision_result = decision_output.get("result", {})
+    
+    # Log checkpoint event for observability
+    # TODO: Emit notification to operator dashboard
+    # TODO: Record time spent waiting for human
+    
+    print(f"[HUMAN REVIEW REQUIRED] Ticket: {state.get('ticket_id')}")
+    print(f"  Recommended action: {decision_result.get('recommended_action', 'unknown')}")
+    print(f"  Confidence: {decision_output.get('confidence', 0):.2f}")
+    print(f"  Risk flags: {decision_result.get('risk_flags', [])}")
+    print(f"  Reasoning: {decision_result.get('reasoning_summary', 'No reasoning')}")
+    
+    # TODO: Integrate with notification service
+    # from observability.events import emit_human_review_required
+    # await emit_human_review_required(
+    #     ticket_id=state["ticket_id"],
+    #     decision=decision_result,
+    # )
     
     return state
 

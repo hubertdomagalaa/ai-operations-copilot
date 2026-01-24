@@ -66,6 +66,7 @@ class TicketProcessingState(TypedDict):
     # === Human-in-the-Loop ===
     human_decision_required: bool
     human_decision: Optional[Dict[str, Any]]
+    human_approval_status: Optional[str]  # "pending", "approved", "rejected", "modified"
     
     # === Error Handling ===
     error: Optional[str]
@@ -112,6 +113,7 @@ def create_initial_state(
         # Human-in-the-loop
         human_decision_required=False,
         human_decision=None,
+        human_approval_status=None,
         
         # Error
         error=None,

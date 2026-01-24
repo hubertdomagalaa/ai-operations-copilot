@@ -5,6 +5,42 @@ Read this file at the start of each session to understand current state.
 
 ---
 
+## Session 5 — 2026-01-24 — DecisionAgent & Human Checkpoint
+
+### Completed
+- Implemented DecisionAgent at `/agents/decision/__init__.py`
+  - Output schema: recommended_action, confidence, risk_flags, requires_human_approval
+  - Decision logic combining triage + knowledge signals
+  - Risk flag detection (low confidence, no documents, high severity)
+  - Human approval always required (safety first)
+- Updated decision_node in workflow
+  - Calls DecisionAgent.process()
+  - Sets human_decision_required flag for routing
+- Updated human_review_node as checkpoint
+  - Sets status to "paused_for_human"
+  - Logs decision context for operator
+  - Workflow pauses until human provides decision
+- Extended state schema with human_approval_status
+
+### Guarantees
+- DecisionAgent NEVER executes actions
+- DecisionAgent NEVER generates customer responses
+- Human approval is MANDATORY before any action
+- All recommendations include risk flags and reasoning
+
+### Human-in-the-Loop Enforcement
+- Workflow routes to human_review after decision
+- Status set to "paused_for_human"
+- resume_workflow() API continues after approval
+- Human can: approve, modify, handle manually, cancel
+
+### Known Limitations
+- No LLM-powered reasoning yet (rule-based)
+- No notification service integration (TODO)
+- No offline evaluation dataset (TODO)
+
+---
+
 ## Session 3 — 2024-01-24 — RAG Foundation Implementation
 
 ### Completed
@@ -21,29 +57,6 @@ Read this file at the start of each session to understand current state.
   - Citation formatting for grounding
 - Updated knowledge_node in workflow
 - Added sample documents at `/data/documents/`
-  - api_docs/authentication.md
-  - api_docs/user_management.md
-  - runbooks/troubleshooting_auth_errors.md
-
-### Design Decisions
-- Chunk size 512 chars: Balances precision with context sufficiency
-- Chunk overlap 64 chars: Prevents boundary information loss
-- Local TF-IDF embeddings: No external dependencies for development
-- In-memory store: Simple, fast, replaceable with production store
-
-### Current State
-- RAG pipeline is COMPLETE and integrated
-- KnowledgeAgent can retrieve grounded context
-- Sample documents ready for testing
-- No downstream logic depends on unfinished work
-
-### Next Steps (Future Sessions)
-1. Implement TriageAgent with LLM classification
-2. Implement DecisionAgent with recommendation logic
-3. Implement ActionAgent for response drafting
-4. Add OpenAI embedding provider
-5. Replace in-memory store with persistent store
-6. Add RAG evaluation metrics
 
 ---
 
@@ -66,9 +79,9 @@ Read this file at the start of each session to understand current state.
 
 ---
 
-## How To Use This File
+## Next Steps
 
-1. Read at the start of each session
-2. Update "Completed" section after each task
-3. Update "Current State" to reflect reality
-4. Update "Next Steps" based on priorities
+1. Implement TriageAgent with LLM classification
+2. Implement ActionAgent for response drafting
+3. Add notification service for human review alerts
+4. Add evaluation pipeline
