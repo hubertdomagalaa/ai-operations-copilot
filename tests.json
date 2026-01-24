@@ -1,0 +1,87 @@
+{
+  "_description": "Structured tracking of system behaviors and test coverage",
+  "_purpose": "Enables future sessions to understand what is tested and what guarantees exist",
+  "_updated": "2024-01-24T18:30:00Z",
+  
+  "test_suites": {
+    "unit": {
+      "status": "skeleton",
+      "location": "tests/unit/",
+      "coverage": {
+        "agents": "placeholder",
+        "workflow": "partial",
+        "schemas": "not_started",
+        "services": "not_started"
+      }
+    },
+    "integration": {
+      "status": "skeleton", 
+      "location": "tests/integration/",
+      "coverage": {
+        "api_endpoints": "placeholder",
+        "workflow_execution": "not_started"
+      }
+    },
+    "evaluation": {
+      "status": "not_started",
+      "location": "tests/evaluation/",
+      "coverage": {
+        "classification": "not_started",
+        "retrieval": "not_started",
+        "response_quality": "not_started"
+      }
+    }
+  },
+  
+  "system_guarantees": {
+    "documented": [
+      {
+        "id": "G001",
+        "description": "All agents return consistent output format",
+        "verified_by": "test_agents.py (pending)",
+        "status": "specified"
+      },
+      {
+        "id": "G002", 
+        "description": "High-risk actions always require human review",
+        "verified_by": "test_agents.py::TestDecisionAgent",
+        "status": "specified"
+      },
+      {
+        "id": "G003",
+        "description": "Workflow state persists correctly for resumption",
+        "verified_by": "test_workflow.py (pending)",
+        "status": "specified"
+      },
+      {
+        "id": "G004",
+        "description": "API returns correct status codes for errors",
+        "verified_by": "test_api.py (pending)",
+        "status": "specified"
+      },
+      {
+        "id": "G005",
+        "description": "All AI outputs include confidence scores",
+        "verified_by": "evaluation/evaluators.py",
+        "status": "specified"
+      }
+    ]
+  },
+  
+  "quality_metrics": {
+    "target_thresholds": {
+      "classification_accuracy": 0.9,
+      "retrieval_precision": 0.8,
+      "response_quality_score": 0.7,
+      "human_override_rate_max": 0.2
+    },
+    "current_baselines": null
+  },
+  
+  "next_actions": [
+    "Implement agent unit tests",
+    "Set up pytest CI pipeline",
+    "Create evaluation dataset",
+    "Establish quality baselines"
+  ]
+}
