@@ -5,35 +5,49 @@ Read this file at the start of each session to understand current state.
 
 ---
 
+## Session 8 — 2026-01-25 — Quality Management Infrastructure
+
+### Completed
+- Created quality management infrastructure at `/evaluation/quality/`
+  - `signals.py`: 12 quality signal definitions
+  - `thresholds.py`: Threshold schema (all inactive)
+  - `calibration.py`: Calibration pipeline skeleton
+  - `regression.py`: Regression detection structures
+  - `QUALITY.md`: Documentation explaining the system
+- Package `__init__.py` with exports
+
+### What Quality Infrastructure Provides
+- Signal definitions: confidence, retrieval, override, latency
+- Threshold configuration schema (ThresholdConfig)
+- Calibration data structures (CalibrationCurve, etc.)
+- Regression comparison structures (RegressionReport, etc.)
+
+### What Remains Intentionally Inactive
+- NO thresholds are set (all `is_active=False`)
+- NO calibration curves are fitted
+- NO regression comparisons are performed
+- NO pass/fail decisions are made
+- NO automated gating
+
+### Required to Activate Quality Management
+1. Collect N > 500 labeled examples
+2. Run offline evaluation with evaluators
+3. Compute calibration curves with human review
+4. Set thresholds with human approval
+5. Store evaluation baselines
+6. Enable with explicit configuration
+
+---
+
 ## Session 7 — 2026-01-25 — Evaluation Infrastructure
 
 ### Completed
 - Created offline evaluation infrastructure at `/evaluation/`
-  - `datasets/__init__.py`: Dataset schema contracts (TicketDatasetItem, etc.)
-  - `runners/__init__.py`: Evaluator interface and runner orchestration
+  - `datasets/__init__.py`: Dataset schema contracts
+  - `runners/__init__.py`: Evaluator interface and runner
   - `reports/__init__.py`: Report generation (JSON, Markdown)
   - `versioning.py`: Version tracking for reproducibility
-  - `EVALUATION.md`: Documentation explaining the system
-- Updated package `__init__.py` with exports
-
-### What Evaluation Infrastructure Provides
-- Dataset contracts for labeled tickets, documents, test cases
-- Evaluator base class with `.evaluate()` interface
-- Placeholder evaluators: TriageAccuracyEvaluator, RetrievalQualityEvaluator, DecisionQualityEvaluator
-- EvaluationRunner for orchestrating multiple evaluators
-- Report generation with metadata and versioning
-
-### What Cannot Be Evaluated Yet (By Design)
-- No real datasets exist
-- No scoring logic is implemented
-- No thresholds are defined
-- No pass/fail determinations
-
-### Required to Activate Evaluation
-1. Create labeled datasets in `/evaluation/datasets/`
-2. Implement `evaluate()` methods in evaluator classes
-3. Define metric thresholds
-4. Run evaluations and generate reports
+  - `EVALUATION.md`: Documentation
 
 ---
 
@@ -41,48 +55,37 @@ Read this file at the start of each session to understand current state.
 
 ### Completed
 - Implemented ActionAgent at `/agents/action/__init__.py`
-  - Output schema: action_type, content, grounding_sources, confidence, disclaimers
-  - Draft response generation (polite, factual, non-committal)
-  - Engineer checklist generation (step-by-step, actionable)
-  - Approval validation (safety gate)
-- Updated action_node in workflow
-
-### Guarantees
-- ActionAgent NEVER executes external calls
-- ActionAgent ONLY prepares drafts and checklists
-- Approval is VALIDATED before any drafting
+- Draft response and checklist generation
+- Approval validation (safety gate)
 
 ---
 
 ## Session 5 — 2026-01-24 — DecisionAgent & Human Checkpoint
 
 ### Completed
-- Implemented DecisionAgent at `/agents/decision/__init__.py`
-- Human approval always required (safety first)
-- Updated human_review_node as checkpoint
+- Implemented DecisionAgent
+- Human approval always required
 
 ---
 
 ## Session 3 — 2024-01-24 — RAG Foundation Implementation
 
 ### Completed
-- Created complete RAG package at `/backend/services/rag/`
-- Updated KnowledgeAgent with full RAG integration
+- Complete RAG package at `/backend/services/rag/`
 
 ---
 
-## Session 2 — 2024-01-24 — LangGraph Workflow Implementation
+## Session 2 — 2024-01-24 — LangGraph Workflow
 
 ### Completed
 - 8 workflow nodes with conditional edges
-- Checkpointing via MemorySaver
 
 ---
 
 ## Session 1 — 2024-01-24 — Initial Bootstrap
 
 ### Completed
-- Created full repository structure
+- Full repository structure
 
 ---
 
