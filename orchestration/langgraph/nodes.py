@@ -154,22 +154,58 @@ async def action_node(state: TicketProcessingState) -> TicketProcessingState:
     """
     Node that invokes the action agent.
     
-    Drafts response and executes actions.
+    Prepares draft responses or action checklists.
     
-    TODO: Implement node logic
+    WHY THIS NODE EXISTS:
+    - Generates grounded, reviewable artifacts
+    - Operates ONLY after human approval
+    - Never executes actions — only prepares drafts
+    
+    PRECONDITION:
+    This node should only be reached if human approval was given.
+    The workflow routing ensures this via route_after_human_review.
     """
-    # TODO: Import and instantiate action agent
-    # from agents.action import ActionAgent
-    # agent = ActionAgent()
+    from agents.action import ActionAgent
     
     state["current_step"] = "action"
+    state["status"] = "running"
     state["updated_at"] = datetime.utcnow().isoformat()
     
-    # TODO: Call agent
-    # result = await agent.run(state)
+    # Mark approval status for audit trail
+    human_decision = state.get("human_decision") or {}
+    if human_decision.get("action") == "approve":
+        state["human_approval_status"] = "approved"
     
-    # TODO: Update state with result
-    # state["action_output"] = result
+    try:
+        # Instantiate and run action agent
+        agent = ActionAgent()
+        result = await agent.process(state)
+        
+        # Update state with action output
+        state["action_output"] = result
+        
+        # TODO: Log action metrics for observability
+        
+    except RuntimeError as e:
+        # Safety violation — approval missing
+        state["action_output"] = {
+            "success": False,
+            "agent_type": "action",
+            "error": str(e),
+        }
+        state["error"] = str(e)
+        # TODO: Alert on safety violation
+        print(f"ACTION AGENT SAFETY VIOLATION: {e}")
+        
+    except Exception as e:
+        # Other errors
+        state["action_output"] = {
+            "success": False,
+            "agent_type": "action",
+            "error": str(e),
+        }
+        # TODO: Log error properly
+        print(f"Action agent error: {e}")
     
     return state
 
