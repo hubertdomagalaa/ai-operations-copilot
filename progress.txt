@@ -5,6 +5,38 @@ Read this file at the start of each session to understand current state.
 
 ---
 
+## Session 7 — 2026-01-25 — Evaluation Infrastructure
+
+### Completed
+- Created offline evaluation infrastructure at `/evaluation/`
+  - `datasets/__init__.py`: Dataset schema contracts (TicketDatasetItem, etc.)
+  - `runners/__init__.py`: Evaluator interface and runner orchestration
+  - `reports/__init__.py`: Report generation (JSON, Markdown)
+  - `versioning.py`: Version tracking for reproducibility
+  - `EVALUATION.md`: Documentation explaining the system
+- Updated package `__init__.py` with exports
+
+### What Evaluation Infrastructure Provides
+- Dataset contracts for labeled tickets, documents, test cases
+- Evaluator base class with `.evaluate()` interface
+- Placeholder evaluators: TriageAccuracyEvaluator, RetrievalQualityEvaluator, DecisionQualityEvaluator
+- EvaluationRunner for orchestrating multiple evaluators
+- Report generation with metadata and versioning
+
+### What Cannot Be Evaluated Yet (By Design)
+- No real datasets exist
+- No scoring logic is implemented
+- No thresholds are defined
+- No pass/fail determinations
+
+### Required to Activate Evaluation
+1. Create labeled datasets in `/evaluation/datasets/`
+2. Implement `evaluate()` methods in evaluator classes
+3. Define metric thresholds
+4. Run evaluations and generate reports
+
+---
+
 ## Session 6 — 2026-01-25 — ActionAgent Implementation
 
 ### Completed
@@ -14,27 +46,11 @@ Read this file at the start of each session to understand current state.
   - Engineer checklist generation (step-by-step, actionable)
   - Approval validation (safety gate)
 - Updated action_node in workflow
-  - Calls ActionAgent.process()
-  - Sets human_approval_status for audit trail
-  - Error handling for safety violations
 
 ### Guarantees
 - ActionAgent NEVER executes external calls
-- ActionAgent NEVER modifies systems
 - ActionAgent ONLY prepares drafts and checklists
 - Approval is VALIDATED before any drafting
-- All drafts are marked as requiring human review
-
-### Non-Autonomy Enforcement
-- _is_approved() validates human decision
-- RuntimeError raised if approval missing
-- action_node logs safety violations
-- No path exists for autonomous execution
-
-### Known Limitations
-- No LLM integration yet (template-based drafting)
-- No token usage tracking (TODO)
-- No human quality scoring (TODO)
 
 ---
 
@@ -42,18 +58,8 @@ Read this file at the start of each session to understand current state.
 
 ### Completed
 - Implemented DecisionAgent at `/agents/decision/__init__.py`
-  - Output schema: recommended_action, confidence, risk_flags, requires_human_approval
-  - Decision logic combining triage + knowledge signals
-  - Risk flag detection (low confidence, no documents, high severity)
-  - Human approval always required (safety first)
-- Updated decision_node in workflow
+- Human approval always required (safety first)
 - Updated human_review_node as checkpoint
-- Extended state schema with human_approval_status
-
-### Guarantees
-- DecisionAgent NEVER executes actions
-- Human approval is MANDATORY before any action
-- All recommendations include risk flags and reasoning
 
 ---
 
@@ -62,14 +68,12 @@ Read this file at the start of each session to understand current state.
 ### Completed
 - Created complete RAG package at `/backend/services/rag/`
 - Updated KnowledgeAgent with full RAG integration
-- Added sample documents at `/data/documents/`
 
 ---
 
 ## Session 2 — 2024-01-24 — LangGraph Workflow Implementation
 
 ### Completed
-- Implemented complete LangGraph workflow skeleton
 - 8 workflow nodes with conditional edges
 - Checkpointing via MemorySaver
 
@@ -85,6 +89,6 @@ Read this file at the start of each session to understand current state.
 ## Next Steps
 
 1. Implement TriageAgent with LLM classification
-2. Add notification service for human review alerts
-3. Add evaluation pipeline
-4. Integrate LLM for ActionAgent drafting
+2. Create labeled evaluation datasets
+3. Implement evaluator scoring logic
+4. Add notification service for human review alerts
