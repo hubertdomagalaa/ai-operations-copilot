@@ -1,0 +1,32 @@
+{
+  "ticket_id": "ticket_009",
+  "source": "github",
+  "product": "FastAPI",
+  "category": "async_concurrency",
+  "issue_type": "bug",
+  "severity": "medium",
+  "environment": "development",
+  "summary": "asyncio.create_subprocess_exec raises NotImplementedError when called from FastAPI endpoint on Windows due to event loop incompatibility.",
+  "symptoms": [
+    "NotImplementedError when calling create_subprocess_exec",
+    "500 Internal Server Error on endpoint",
+    "Works when run directly with asyncio.run but fails under uvicorn",
+    "Windows-specific issue"
+  ],
+  "suspected_root_cause": "Windows default event loop (SelectorEventLoop) does not support subprocess operations; ProactorEventLoop is required but uvicorn does not support custom event loop configuration",
+  "affected_components": [
+    "asyncio",
+    "subprocess",
+    "uvicorn",
+    "event loop"
+  ],
+  "reproducible": true,
+  "has_code_example": true,
+  "resolution_known": false,
+  "resolution_type": "unknown",
+  "related_versions": {
+    "fastapi": "0.70.1",
+    "python": "3.10.1"
+  },
+  "raw_reference": "data/tickets/raw/ticket_009.md"
+}

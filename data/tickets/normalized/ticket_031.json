@@ -1,0 +1,30 @@
+{
+  "ticket_id": "ticket_031",
+  "source": "github",
+  "product": "FastAPI",
+  "category": "serialization",
+  "issue_type": "question",
+  "severity": "medium",
+  "environment": "development",
+  "summary": "Feature request: Pydantic Json fields from SQLAlchemy JSON columns should be automatically cast without requiring custom validators for response serialization.",
+  "symptoms": [
+    "ValidationError: str type expected for JSON field",
+    "SQLAlchemy JSON column values not automatically serialized",
+    "Requires workaround validator with json.dumps"
+  ],
+  "suspected_root_cause": "Pydantic Json type expects string input but SQLAlchemy returns parsed Python objects from JSON columns",
+  "affected_components": [
+    "Pydantic Json field",
+    "SQLAlchemy JSON column",
+    "response serialization"
+  ],
+  "reproducible": true,
+  "has_code_example": true,
+  "resolution_known": true,
+  "resolution_type": "workaround",
+  "related_versions": {
+    "fastapi": "unknown",
+    "python": "3.7"
+  },
+  "raw_reference": "data/tickets/raw/ticket_031.md"
+}

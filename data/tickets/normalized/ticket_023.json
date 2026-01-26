@@ -1,0 +1,30 @@
+{
+  "ticket_id": "ticket_023",
+  "source": "github",
+  "product": "FastAPI",
+  "category": "validation",
+  "issue_type": "question",
+  "severity": "low",
+  "environment": "unknown",
+  "summary": "Feature request to allow empty request body when all Pydantic model fields are optional, currently returns HTTP 422 when body is empty string instead of empty JSON object.",
+  "symptoms": [
+    "HTTP 422 returned when body is empty string",
+    "Works with {} but not with empty body",
+    "Inconsistent behavior between empty body and empty JSON object"
+  ],
+  "suspected_root_cause": "FastAPI validates that JSON body must be present even when all model fields are optional",
+  "affected_components": [
+    "request body validation",
+    "Pydantic BaseModel",
+    "optional fields"
+  ],
+  "reproducible": true,
+  "has_code_example": true,
+  "resolution_known": false,
+  "resolution_type": "unknown",
+  "related_versions": {
+    "fastapi": "0.85.1",
+    "python": "3.10.2"
+  },
+  "raw_reference": "data/tickets/raw/ticket_023.md"
+}

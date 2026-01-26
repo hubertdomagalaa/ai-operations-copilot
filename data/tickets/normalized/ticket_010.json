@@ -1,0 +1,33 @@
+{
+  "ticket_id": "ticket_010",
+  "source": "github",
+  "product": "FastAPI",
+  "category": "middleware",
+  "issue_type": "bug",
+  "severity": "medium",
+  "environment": "unknown",
+  "summary": "Client disconnect during request causes 'No response returned' RuntimeError spam when using db session middleware with exception handler middleware.",
+  "symptoms": [
+    "No response returned errors from Starlette",
+    "AnyIO EndOfStream error propagated as RuntimeError",
+    "Error spam in logs when client disconnects early",
+    "Occurs with combination of db session and exception handler middleware"
+  ],
+  "suspected_root_cause": "Middleware chain does not properly handle client disconnection, causing EndOfStream to propagate as unhandled RuntimeError",
+  "affected_components": [
+    "middleware",
+    "db session middleware",
+    "exception handling",
+    "client disconnect handling"
+  ],
+  "reproducible": true,
+  "has_code_example": true,
+  "resolution_known": false,
+  "resolution_type": "unknown",
+  "related_versions": {
+    "fastapi": "0.73.0",
+    "python": "3.9.6",
+    "sqlalchemy": "1.4.31"
+  },
+  "raw_reference": "data/tickets/raw/ticket_010.md"
+}

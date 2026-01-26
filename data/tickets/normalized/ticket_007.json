@@ -1,0 +1,30 @@
+{
+  "ticket_id": "ticket_007",
+  "source": "github",
+  "product": "FastAPI",
+  "category": "response_handling",
+  "issue_type": "question",
+  "severity": "low",
+  "environment": "development",
+  "summary": "User encountering TypeError when using Response with status_code argument in DELETE endpoint returning 204 No Content.",
+  "symptoms": [
+    "TypeError: Response.init() got an unexpected keyword argument 'status_code'",
+    "RuntimeError: Response content longer than Content-Length",
+    "DELETE endpoint with 204 status not working as expected"
+  ],
+  "suspected_root_cause": "Incorrect Response import or usage - likely importing wrong Response class or using incorrect syntax for status_code parameter",
+  "affected_components": [
+    "Response",
+    "DELETE endpoints",
+    "HTTP 204 handling"
+  ],
+  "reproducible": true,
+  "has_code_example": true,
+  "resolution_known": false,
+  "resolution_type": "unknown",
+  "related_versions": {
+    "fastapi": "0.78.0",
+    "python": "3.10.4"
+  },
+  "raw_reference": "data/tickets/raw/ticket_007.md"
+}

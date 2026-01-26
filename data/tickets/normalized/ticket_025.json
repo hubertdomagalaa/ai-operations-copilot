@@ -1,0 +1,31 @@
+{
+  "ticket_id": "ticket_025",
+  "source": "github",
+  "product": "FastAPI",
+  "category": "serialization",
+  "issue_type": "bug",
+  "severity": "high",
+  "environment": "development",
+  "summary": "jsonable_encoder fails with UnicodeDecodeError when encoding non-UTF8 bytes via fastapi_cache, as Pydantic's default bytes encoder assumes UTF-8.",
+  "symptoms": [
+    "UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff",
+    "Exception in ASGI application",
+    "Occurs when caching responses with binary data"
+  ],
+  "suspected_root_cause": "Pydantic's default bytes encoder uses lambda o: o.decode() which assumes UTF-8 encoding, failing on binary data",
+  "affected_components": [
+    "jsonable_encoder",
+    "fastapi_cache",
+    "bytes encoding",
+    "pydantic.json"
+  ],
+  "reproducible": true,
+  "has_code_example": false,
+  "resolution_known": false,
+  "resolution_type": "unknown",
+  "related_versions": {
+    "fastapi": "0.70.0",
+    "python": "3.9.8"
+  },
+  "raw_reference": "data/tickets/raw/ticket_025.md"
+}

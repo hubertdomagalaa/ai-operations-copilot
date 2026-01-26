@@ -1,0 +1,29 @@
+{
+  "ticket_id": "ticket_019",
+  "source": "github",
+  "product": "FastAPI",
+  "category": "performance",
+  "issue_type": "question",
+  "severity": "low",
+  "environment": "production",
+  "summary": "User reports FastAPI performance is similar to Flask in GCP Cloud Run load testing, expecting better performance based on documentation claims.",
+  "symptoms": [
+    "Throughput of ~200 req/sec similar between Flask and FastAPI",
+    "No performance improvement observed over Flask",
+    "Tested with 1000 req/sec for 180 sec duration"
+  ],
+  "suspected_root_cause": "unknown",
+  "affected_components": [
+    "performance",
+    "uvicorn"
+  ],
+  "reproducible": true,
+  "has_code_example": true,
+  "resolution_known": false,
+  "resolution_type": "unknown",
+  "related_versions": {
+    "fastapi": "0.68.0",
+    "python": "3.8"
+  },
+  "raw_reference": "data/tickets/raw/ticket_019.md"
+}

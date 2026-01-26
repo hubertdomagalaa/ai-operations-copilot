@@ -1,0 +1,31 @@
+{
+  "ticket_id": "ticket_027",
+  "source": "github",
+  "product": "FastAPI",
+  "category": "middleware",
+  "issue_type": "bug",
+  "severity": "high",
+  "environment": "development",
+  "summary": "Second HTTP request hangs pending when using middleware with BackgroundTasks containing long-running async sleep.",
+  "symptoms": [
+    "Second request to endpoint hangs pending",
+    "Works fine without middleware",
+    "Background task with async sleep blocks subsequent requests"
+  ],
+  "suspected_root_cause": "Middleware interaction with BackgroundTasks and async sleep causes request processing to block",
+  "affected_components": [
+    "middleware",
+    "BackgroundTasks",
+    "asyncio.sleep",
+    "request handling"
+  ],
+  "reproducible": true,
+  "has_code_example": true,
+  "resolution_known": false,
+  "resolution_type": "unknown",
+  "related_versions": {
+    "fastapi": "0.66.1",
+    "python": "3.9.5"
+  },
+  "raw_reference": "data/tickets/raw/ticket_027.md"
+}

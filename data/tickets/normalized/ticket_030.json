@@ -1,0 +1,31 @@
+{
+  "ticket_id": "ticket_030",
+  "source": "github",
+  "product": "FastAPI",
+  "category": "validation",
+  "issue_type": "bug",
+  "severity": "medium",
+  "environment": "development",
+  "summary": "Invalid condecimal constraint violation returns 500 Internal Server Error with TypeError instead of expected 422 validation error.",
+  "symptoms": [
+    "500 Internal Server Error instead of 422",
+    "TypeError raised when decimal constraint violated",
+    "Pydantic alone correctly raises ValidationError"
+  ],
+  "suspected_root_cause": "FastAPI's error handling does not properly catch and convert Pydantic condecimal validation errors to HTTP 422 responses",
+  "affected_components": [
+    "condecimal",
+    "decimal validation",
+    "error handling"
+  ],
+  "reproducible": true,
+  "has_code_example": false,
+  "resolution_known": false,
+  "resolution_type": "unknown",
+  "related_versions": {
+    "fastapi": "0.44.0",
+    "pydantic": "1.1.1",
+    "python": "3.7.2"
+  },
+  "raw_reference": "data/tickets/raw/ticket_030.md"
+}

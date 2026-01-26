@@ -1,0 +1,30 @@
+{
+  "ticket_id": "ticket_026",
+  "source": "github",
+  "product": "FastAPI",
+  "category": "middleware",
+  "issue_type": "bug",
+  "severity": "medium",
+  "environment": "development",
+  "summary": "GZipMiddleware does not compress StreamingResponse content, but works correctly with FileResponse.",
+  "symptoms": [
+    "StreamingResponse not compressed with GZipMiddleware",
+    "FileResponse works correctly with compression",
+    "Inconsistent middleware behavior between response types"
+  ],
+  "suspected_root_cause": "GZipMiddleware may not properly handle streaming response iterators or lacks Content-Length header needed for compression decision",
+  "affected_components": [
+    "GZipMiddleware",
+    "StreamingResponse",
+    "response compression"
+  ],
+  "reproducible": true,
+  "has_code_example": true,
+  "resolution_known": false,
+  "resolution_type": "unknown",
+  "related_versions": {
+    "fastapi": "0.75",
+    "python": "3.10.3"
+  },
+  "raw_reference": "data/tickets/raw/ticket_026.md"
+}

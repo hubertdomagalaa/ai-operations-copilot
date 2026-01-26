@@ -1,0 +1,32 @@
+{
+  "ticket_id": "ticket_029",
+  "source": "github",
+  "product": "FastAPI",
+  "category": "validation",
+  "issue_type": "bug",
+  "severity": "medium",
+  "environment": "development",
+  "summary": "Invalid HttpUrl in request body returns 500 Internal Server Error with 'set is not JSON serializable' instead of expected 422 validation error.",
+  "symptoms": [
+    "500 Internal Server Error instead of 422",
+    "TypeError: Object of type set is not JSON serializable",
+    "Invalid URL schema (htp:// instead of http://) not properly validated"
+  ],
+  "suspected_root_cause": "HttpUrl validation error produces a set object that cannot be serialized to JSON for the error response",
+  "affected_components": [
+    "HttpUrl",
+    "validation error handling",
+    "JSON serialization"
+  ],
+  "reproducible": true,
+  "has_code_example": true,
+  "resolution_known": false,
+  "resolution_type": "unknown",
+  "related_versions": {
+    "fastapi": "0.44.0",
+    "pydantic": "1.2",
+    "starlette": "0.12.9",
+    "python": "3.7.5"
+  },
+  "raw_reference": "data/tickets/raw/ticket_029.md"
+}

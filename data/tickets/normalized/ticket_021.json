@@ -1,0 +1,33 @@
+{
+  "ticket_id": "ticket_021",
+  "source": "github",
+  "product": "FastAPI",
+  "category": "validation",
+  "issue_type": "bug",
+  "severity": "high",
+  "environment": "unknown",
+  "summary": "AfterValidator using Annotated directly in FastAPI parameters returns 200 instead of 422 in version 0.115.10, regression from 0.115.9.",
+  "symptoms": [
+    "Validator raising ValueError is ignored",
+    "Returns HTTP 200 instead of expected 422",
+    "Problem only when using Annotated directly in parameters",
+    "Works correctly when used inside Pydantic models"
+  ],
+  "suspected_root_cause": "Bug introduced in PR #13314 affecting Annotated validators in direct FastAPI parameters",
+  "affected_components": [
+    "Annotated",
+    "AfterValidator",
+    "parameter validation"
+  ],
+  "reproducible": true,
+  "has_code_example": true,
+  "resolution_known": true,
+  "resolution_type": "fixed_upstream",
+  "related_versions": {
+    "fastapi_broken": "0.115.10",
+    "fastapi_working": "0.115.9",
+    "pydantic": "2.9.2",
+    "python": "3.12"
+  },
+  "raw_reference": "data/tickets/raw/ticket_021.md"
+}

@@ -1,17 +1,20 @@
-# Data Directory — Tickets
+# Ticket Dataset
 
-This directory contains support ticket data.
+This directory contains a production-style dataset of support tickets.
 
-## Purpose
-- Store raw ingested tickets
-- Store processed ticket results
-- Maintain ticket history for evaluation
+## Structure
+- raw/        – immutable source tickets (public GitHub issues)
+- normalized/ – structured representations used by the AI system
 
-## Structure (when implemented)
-- `raw/` — Original ticket JSON files
-- `processed/` — Tickets with agent outputs
-- `archived/` — Old tickets for training/evaluation
+## Data quality
+- All tickets have been audited for schema correctness
+- No hallucinated fields
+- Conservative normalization strategy
 
-## Note
-In production, this would be replaced by a database.
-Local files are for development and testing only.
+## Status
+LOCKED – no further modifications expected.
+
+Downstream usage:
+- RAG ingestion
+- Agent workflows
+- Offline evaluation

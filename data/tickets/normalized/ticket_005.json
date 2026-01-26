@@ -1,0 +1,33 @@
+{
+  "ticket_id": "ticket_005",
+  "source": "github",
+  "product": "FastAPI",
+  "category": "type_hints",
+  "issue_type": "bug",
+  "severity": "medium",
+  "environment": "unknown",
+  "summary": "Using JSONResponse as return type hint causes FastAPIError in version 0.89.0, regression from 0.88.0.",
+  "symptoms": [
+    "FastAPIError: Invalid args for response field",
+    "Error only appears on Linux, works on Windows 10",
+    "Removing type hint resolves issue",
+    "Error occurs during module import/decoration"
+  ],
+  "suspected_root_cause": "FastAPI 0.89.0 changed response field validation to check if return type hint is a valid Pydantic field type, and JSONResponse is not recognized as valid",
+  "affected_components": [
+    "routing",
+    "response_field",
+    "type hints",
+    "JSONResponse"
+  ],
+  "reproducible": true,
+  "has_code_example": true,
+  "resolution_known": false,
+  "resolution_type": "unknown",
+  "related_versions": {
+    "fastapi": "0.89.0",
+    "fastapi_working": "0.88.0",
+    "python": "3.8.12"
+  },
+  "raw_reference": "data/tickets/raw/ticket_005.md"
+}

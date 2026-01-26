@@ -1,0 +1,32 @@
+{
+  "ticket_id": "ticket_001",
+  "source": "github",
+  "product": "FastAPI",
+  "category": "dependency_lifecycle",
+  "issue_type": "bug",
+  "severity": "medium",
+  "environment": "unknown",
+  "summary": "Function-scoped yield dependencies are cleaned up after response is sent when dependency is declared on APIRouter instead of on the path function.",
+  "symptoms": [
+    "Dependency cleanup error occurs after HTTP 200 response is already sent",
+    "Endpoint returns 200 instead of expected 500 when cleanup fails",
+    "Different behavior when dependency is on router vs path function"
+  ],
+  "suspected_root_cause": "The 'function' scope for yield dependencies is interpreted relative to where the dependency is requested (router level) rather than always being the path function",
+  "affected_components": [
+    "APIRouter",
+    "Depends",
+    "yield dependencies",
+    "scope parameter"
+  ],
+  "reproducible": true,
+  "has_code_example": true,
+  "resolution_known": true,
+  "resolution_type": "fixed_upstream",
+  "related_versions": {
+    "fastapi": "0.121.0",
+    "pydantic": "2.12.3",
+    "python": "3.11.12"
+  },
+  "raw_reference": "data/tickets/raw/ticket_001.md"
+}

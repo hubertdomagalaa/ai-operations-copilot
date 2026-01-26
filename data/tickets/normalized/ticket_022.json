@@ -1,0 +1,34 @@
+{
+  "ticket_id": "ticket_022",
+  "source": "github",
+  "product": "FastAPI",
+  "category": "openapi",
+  "issue_type": "bug",
+  "severity": "high",
+  "environment": "development",
+  "summary": "OpenAPI schema generation fails with ValidationError when upgrading from FastAPI 0.98.0 to 0.99.0 due to additionalProperties: false not being recognized as valid JSON Schema.",
+  "symptoms": [
+    "pydantic.error_wrappers.ValidationError on openapi() call",
+    "additionalProperties value is not a valid dict error",
+    "$ref field required error",
+    "Breaking change when using extra='forbid' in Pydantic models"
+  ],
+  "suspected_root_cause": "JSON Schema 2020-12 upgrade removed bool as valid type for additionalProperties; it can be false to mean no additional properties allowed",
+  "affected_components": [
+    "OpenAPI schema generation",
+    "JSON Schema models",
+    "additionalProperties",
+    "Pydantic extra=forbid"
+  ],
+  "reproducible": true,
+  "has_code_example": true,
+  "resolution_known": true,
+  "resolution_type": "fixed_upstream",
+  "related_versions": {
+    "fastapi_broken": "0.99.0",
+    "fastapi_working": "0.98.0",
+    "pydantic": "1.10.10",
+    "python": "3.10.6"
+  },
+  "raw_reference": "data/tickets/raw/ticket_022.md"
+}

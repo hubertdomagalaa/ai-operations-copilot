@@ -1,0 +1,30 @@
+{
+  "ticket_id": "ticket_012",
+  "source": "github",
+  "product": "FastAPI",
+  "category": "testing",
+  "issue_type": "bug",
+  "severity": "medium",
+  "environment": "development",
+  "summary": "TestClient.put() raises TypeError about unexpected 'extensions' argument after FastAPI update changed from Requests to HTTPX.",
+  "symptoms": [
+    "TypeError: Client.put() got an unexpected keyword argument 'extensions'",
+    "Tests fail after FastAPI version update",
+    "Regression after commit f92f87d"
+  ],
+  "suspected_root_cause": "FastAPI TestClient passes 'extensions' parameter to httpx.Client.put() but httpx does not support this parameter, causing signature mismatch",
+  "affected_components": [
+    "TestClient",
+    "httpx",
+    "PUT method"
+  ],
+  "reproducible": true,
+  "has_code_example": true,
+  "resolution_known": false,
+  "resolution_type": "unknown",
+  "related_versions": {
+    "fastapi": "0.87.0",
+    "python": "3.10"
+  },
+  "raw_reference": "data/tickets/raw/ticket_012.md"
+}

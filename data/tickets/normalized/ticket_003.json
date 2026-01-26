@@ -1,0 +1,32 @@
+{
+  "ticket_id": "ticket_003",
+  "source": "github",
+  "product": "FastAPI",
+  "category": "validation",
+  "issue_type": "bug",
+  "severity": "medium",
+  "environment": "unknown",
+  "summary": "Query parameter allow_inf_nan=False does not validate input, allowing inf and nan values to pass through to route handler instead of returning HTTP 422.",
+  "symptoms": [
+    "HTTP 500 Internal Server Error instead of 422 when inf is passed",
+    "allow_inf_nan=False constraint not enforced on Query parameters",
+    "Assertion error in handler because invalid values reach handler"
+  ],
+  "suspected_root_cause": "The allow_inf_nan parameter is not properly integrated into FastAPI's validation pipeline for Query parameters",
+  "affected_components": [
+    "Query",
+    "parameter validation",
+    "allow_inf_nan"
+  ],
+  "reproducible": true,
+  "has_code_example": true,
+  "resolution_known": false,
+  "resolution_type": "unknown",
+  "related_versions": {
+    "fastapi": "0.111.0",
+    "pydantic": "2.7.1",
+    "python": "3.10.14",
+    "uvicorn": "0.29.0"
+  },
+  "raw_reference": "data/tickets/raw/ticket_003.md"
+}

@@ -1,0 +1,32 @@
+{
+  "ticket_id": "ticket_002",
+  "source": "github",
+  "product": "FastAPI",
+  "category": "async_concurrency",
+  "issue_type": "bug",
+  "severity": "medium",
+  "environment": "unknown",
+  "summary": "Sync yield dependencies produce broken error tracebacks that do not show the actual exception location, while async yield dependencies show correct tracebacks.",
+  "symptoms": [
+    "500 Internal Server Error with incomplete traceback",
+    "Traceback does not show line where exception was raised for sync yield dependencies",
+    "Async yield dependencies show correct traceback with exception location"
+  ],
+  "suspected_root_cause": "Difference in how sync vs async yield dependencies handle exception context in Python 3.11, possibly related to contextmanager_in_threadpool implementation",
+  "affected_components": [
+    "Depends",
+    "yield dependencies",
+    "contextmanager_in_threadpool",
+    "exception handling"
+  ],
+  "reproducible": true,
+  "has_code_example": true,
+  "resolution_known": false,
+  "resolution_type": "unknown",
+  "related_versions": {
+    "fastapi": "0.88.0",
+    "python": "3.11",
+    "uvicorn": "0.20.0"
+  },
+  "raw_reference": "data/tickets/raw/ticket_002.md"
+}

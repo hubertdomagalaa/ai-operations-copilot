@@ -1,0 +1,32 @@
+{
+  "ticket_id": "ticket_013",
+  "source": "github",
+  "product": "FastAPI",
+  "category": "async_concurrency",
+  "issue_type": "bug",
+  "severity": "medium",
+  "environment": "development",
+  "summary": "HTTP requests hang infinitely after spawning child processes and uvicorn timeout_keep_alive expires, connection appears lost but socket remains open.",
+  "symptoms": [
+    "HTTP request infinite loading in browser",
+    "TRACE: HTTP connection lost in uvicorn logs",
+    "Socket remains open per netstat",
+    "Subsequent requests work and return two responses"
+  ],
+  "suspected_root_cause": "Multiprocessing child processes interact with uvicorn's keep-alive connection management, causing connection state inconsistency after timeout",
+  "affected_components": [
+    "multiprocessing",
+    "uvicorn",
+    "timeout_keep_alive",
+    "HTTP connection handling"
+  ],
+  "reproducible": true,
+  "has_code_example": true,
+  "resolution_known": false,
+  "resolution_type": "unknown",
+  "related_versions": {
+    "fastapi": "0.85",
+    "python": "3.10"
+  },
+  "raw_reference": "data/tickets/raw/ticket_013.md"
+}

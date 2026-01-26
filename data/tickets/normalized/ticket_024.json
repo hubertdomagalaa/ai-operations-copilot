@@ -1,0 +1,30 @@
+{
+  "ticket_id": "ticket_024",
+  "source": "github",
+  "product": "FastAPI",
+  "category": "openapi",
+  "issue_type": "bug",
+  "severity": "high",
+  "environment": "development",
+  "summary": "OpenAPI schema generation fails with UnboundLocalError when status_code_param.default is not an integer, causing /docs endpoint to return 500.",
+  "symptoms": [
+    "UnboundLocalError: local variable 'status_code' referenced before assignment",
+    "GET /openapi.json returns 500 Internal Server Error",
+    "/docs page fails to load"
+  ],
+  "suspected_root_cause": "Code path in openapi/utils.py line 261-265 does not set status_code variable when status_code_param.default is not an int, leading to UnboundLocalError",
+  "affected_components": [
+    "openapi/utils.py",
+    "get_openapi_path",
+    "status_code handling"
+  ],
+  "reproducible": true,
+  "has_code_example": false,
+  "resolution_known": true,
+  "resolution_type": "workaround",
+  "related_versions": {
+    "fastapi": "0.76.0",
+    "python": "3.8.13"
+  },
+  "raw_reference": "data/tickets/raw/ticket_024.md"
+}

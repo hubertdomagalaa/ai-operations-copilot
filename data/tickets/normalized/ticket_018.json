@@ -1,0 +1,31 @@
+{
+  "ticket_id": "ticket_018",
+  "source": "github",
+  "product": "FastAPI",
+  "category": "serialization",
+  "issue_type": "question",
+  "severity": "low",
+  "environment": "development",
+  "summary": "Feature request to support custom_encoder parameter in get_route_handler and get_request_handler for optimal multimedia (msgpack/JSON) route handling with bytes fields.",
+  "symptoms": [
+    "Cannot pass custom encoders to serialize_response for different mime types",
+    "Bytes fields serialized inefficiently between msgpack and base64",
+    "Need to override encoders for multimedia routes"
+  ],
+  "suspected_root_cause": "get_request_handler does not accept custom_encoder parameter, limiting flexibility for multimedia route implementations",
+  "affected_components": [
+    "get_route_handler",
+    "get_request_handler",
+    "serialize_response",
+    "custom_encoder"
+  ],
+  "reproducible": false,
+  "has_code_example": true,
+  "resolution_known": false,
+  "resolution_type": "unknown",
+  "related_versions": {
+    "fastapi": "0.83.0",
+    "python": "3.8.12"
+  },
+  "raw_reference": "data/tickets/raw/ticket_018.md"
+}

@@ -1,0 +1,29 @@
+{
+  "ticket_id": "ticket_016",
+  "source": "github",
+  "product": "FastAPI",
+  "category": "performance",
+  "issue_type": "bug",
+  "severity": "medium",
+  "environment": "development",
+  "summary": "Performance bug identified in solve_dependencies causing overhead when using Depends type dependencies on endpoints.",
+  "symptoms": [
+    "Performance overhead with Depends type dependencies",
+    "Slow non-path parameter resolution"
+  ],
+  "suspected_root_cause": "Inefficient implementation in solve_dependencies function",
+  "affected_components": [
+    "solve_dependencies",
+    "Depends",
+    "endpoint parameters"
+  ],
+  "reproducible": false,
+  "has_code_example": false,
+  "resolution_known": true,
+  "resolution_type": "fixed_upstream",
+  "related_versions": {
+    "fastapi": "main branch",
+    "python": "3.10"
+  },
+  "raw_reference": "data/tickets/raw/ticket_016.md"
+}

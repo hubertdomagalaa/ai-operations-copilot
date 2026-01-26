@@ -1,0 +1,31 @@
+{
+  "ticket_id": "ticket_028",
+  "source": "github",
+  "product": "FastAPI",
+  "category": "installation",
+  "issue_type": "bug",
+  "severity": "medium",
+  "environment": "development",
+  "summary": "Installing fastapi without [all] extras causes /docs endpoint to fail with TypeError in get_flat_models_from_fields due to missing dependencies.",
+  "symptoms": [
+    "TypeError: get_flat_models_from_fields() missing 1 required positional argument 'known_models'",
+    "/openapi.json returns 500 Internal Server Error",
+    "/docs page fails to load"
+  ],
+  "suspected_root_cause": "Installing only fastapi and uvicorn without fastapi[all] does not install required dependencies for OpenAPI documentation generation",
+  "affected_components": [
+    "installation",
+    "openapi",
+    "get_flat_models_from_routes",
+    "documentation"
+  ],
+  "reproducible": true,
+  "has_code_example": true,
+  "resolution_known": true,
+  "resolution_type": "configuration",
+  "related_versions": {
+    "fastapi": "0.29.0",
+    "python": "3.7.0"
+  },
+  "raw_reference": "data/tickets/raw/ticket_028.md"
+}

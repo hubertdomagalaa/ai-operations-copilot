@@ -1,0 +1,32 @@
+{
+  "ticket_id": "ticket_008",
+  "source": "github",
+  "product": "FastAPI",
+  "category": "response_handling",
+  "issue_type": "bug",
+  "severity": "medium",
+  "environment": "development",
+  "summary": "DELETE endpoint returning None with status 204 causes RuntimeError 'Response content longer than Content-Length' in uvicorn logs despite correct client response.",
+  "symptoms": [
+    "RuntimeError: Response content longer than Content-Length",
+    "ERROR: Exception in ASGI application in logs",
+    "Client receives correct 204 response despite error",
+    "Problem specific to DELETE method with 204 status"
+  ],
+  "suspected_root_cause": "Returning None from endpoint with 204 status creates a response body mismatch with Content-Length header in Starlette/uvicorn",
+  "affected_components": [
+    "DELETE endpoints",
+    "HTTP 204 No Content",
+    "Response body handling",
+    "uvicorn"
+  ],
+  "reproducible": true,
+  "has_code_example": true,
+  "resolution_known": false,
+  "resolution_type": "unknown",
+  "related_versions": {
+    "fastapi": "0.78.0",
+    "python": "3.10"
+  },
+  "raw_reference": "data/tickets/raw/ticket_008.md"
+}

@@ -1,0 +1,29 @@
+{
+  "ticket_id": "ticket_006",
+  "source": "github",
+  "product": "FastAPI",
+  "category": "authentication",
+  "issue_type": "question",
+  "severity": "low",
+  "environment": "unknown",
+  "summary": "User seeking guidance on how to implement dynamic role-based access control (RBAC) and permission management in FastAPI.",
+  "symptoms": [
+    "No built-in dynamic RBAC support found in documentation",
+    "User implemented custom RoleChecker class as workaround"
+  ],
+  "suspected_root_cause": "unknown",
+  "affected_components": [
+    "Depends",
+    "dependencies",
+    "authorization"
+  ],
+  "reproducible": false,
+  "has_code_example": true,
+  "resolution_known": false,
+  "resolution_type": "unknown",
+  "related_versions": {
+    "fastapi": "0.87.0",
+    "python": "3.10.8"
+  },
+  "raw_reference": "data/tickets/raw/ticket_006.md"
+}

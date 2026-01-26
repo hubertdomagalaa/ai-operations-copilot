@@ -1,0 +1,33 @@
+{
+  "ticket_id": "ticket_020",
+  "source": "github",
+  "product": "FastAPI",
+  "category": "validation",
+  "issue_type": "bug",
+  "severity": "high",
+  "environment": "unknown",
+  "summary": "Two regressions in form handling: default values broken for x-form-urlencoded and multipart forms when migrating from v0.112.4 to v0.115.11.",
+  "symptoms": [
+    "Empty string submitted in form returns '' instead of None default",
+    "Default values ignored for Optional form fields",
+    "Regression in x-form-urlencoded handling from PR #12134",
+    "Regression in multipart form handling from PR #12117"
+  ],
+  "suspected_root_cause": "PR #12134 and #12117 changed form field extraction logic, removing checks for empty fields and re-adding body fields blindly",
+  "affected_components": [
+    "Form",
+    "File",
+    "_extract_form_body",
+    "_get_multi_dict_value",
+    "dependencies/utils"
+  ],
+  "reproducible": true,
+  "has_code_example": true,
+  "resolution_known": true,
+  "resolution_type": "workaround",
+  "related_versions": {
+    "fastapi_broken": "0.115.11",
+    "fastapi_working": "0.112.4"
+  },
+  "raw_reference": "data/tickets/raw/ticket_020.md"
+}

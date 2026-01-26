@@ -1,0 +1,30 @@
+{
+  "ticket_id": "ticket_017",
+  "source": "github",
+  "product": "FastAPI",
+  "category": "performance",
+  "issue_type": "investigation",
+  "severity": "medium",
+  "environment": "development",
+  "summary": "Integration tests run slowly and get stuck after upgrading FastAPI above version 0.82.0, possibly related to yield dependency capacity limiter changes.",
+  "symptoms": [
+    "Integration tests stuck running slowly",
+    "High latency after upgrading to versions > 0.82.0",
+    "Works normally with versions <= 0.82.0"
+  ],
+  "suspected_root_cause": "Changes to capacity limiter for yield dependencies in PR #5122 may have unintended side effects on test execution performance",
+  "affected_components": [
+    "yield dependencies",
+    "capacity limiter",
+    "test execution"
+  ],
+  "reproducible": true,
+  "has_code_example": true,
+  "resolution_known": false,
+  "resolution_type": "unknown",
+  "related_versions": {
+    "fastapi": "0.82.0",
+    "python": "3.10"
+  },
+  "raw_reference": "data/tickets/raw/ticket_017.md"
+}

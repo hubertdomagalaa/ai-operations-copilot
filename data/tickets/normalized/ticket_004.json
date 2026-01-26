@@ -1,0 +1,32 @@
+{
+  "ticket_id": "ticket_004",
+  "source": "github",
+  "product": "FastAPI",
+  "category": "file_handling",
+  "issue_type": "bug",
+  "severity": "high",
+  "environment": "unknown",
+  "summary": "UploadFile objects are prematurely closed when used inside StreamingResponse generators in FastAPI 0.106.0+, breaking file upload streaming functionality.",
+  "symptoms": [
+    "UploadFile file handle reports closed=true inside StreamingResponse generator",
+    "Unable to read uploaded file content in streaming context",
+    "Regression from v0.105.0 to v0.106.0"
+  ],
+  "suspected_root_cause": "FastAPI 0.106.0 introduced changes to file lifecycle management that close UploadFile handles before StreamingResponse generator executes",
+  "affected_components": [
+    "UploadFile",
+    "StreamingResponse",
+    "File"
+  ],
+  "reproducible": true,
+  "has_code_example": true,
+  "resolution_known": false,
+  "resolution_type": "unknown",
+  "related_versions": {
+    "fastapi": "0.106.0",
+    "fastapi_working": "0.105.0",
+    "pydantic": "2.5.3",
+    "python": "3.11.4"
+  },
+  "raw_reference": "data/tickets/raw/ticket_004.md"
+}

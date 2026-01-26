@@ -1,0 +1,29 @@
+{
+  "ticket_id": "ticket_011",
+  "source": "github",
+  "product": "FastAPI",
+  "category": "middleware",
+  "issue_type": "question",
+  "severity": "low",
+  "environment": "development",
+  "summary": "User reports that timeout middleware using asyncio.wait_for requires two @app.middleware decorators to work correctly.",
+  "symptoms": [
+    "Timeout exception middleware does not work with single middleware",
+    "Requires two @app.middleware decorators to function"
+  ],
+  "suspected_root_cause": "unknown",
+  "affected_components": [
+    "middleware",
+    "asyncio.wait_for",
+    "timeout handling"
+  ],
+  "reproducible": false,
+  "has_code_example": true,
+  "resolution_known": false,
+  "resolution_type": "unknown",
+  "related_versions": {
+    "fastapi": "0.89.1",
+    "python": "3.9"
+  },
+  "raw_reference": "data/tickets/raw/ticket_011.md"
+}
