@@ -33,27 +33,68 @@ async def triage_node(state: TicketProcessingState) -> TicketProcessingState:
     """
     Node that invokes the triage agent.
     
+    Classifies and prioritizes the ticket.
     Updates state with triage output.
     
-    TODO: Implement node logic
+    WHY THIS NODE EXISTS:
+    - First intelligence step in the workflow
+    - Determines routing (normal vs escalation)
+    - Extracts keywords for RAG retrieval
     """
-    # TODO: Import and instantiate triage agent
-    # from agents.triage import TriageAgent
-    # agent = TriageAgent()
+    from agents.triage import TriageAgent
     
-    # TODO: Update state to show we're triaging
     state["current_step"] = "triage"
     state["status"] = "running"
     state["updated_at"] = datetime.utcnow().isoformat()
     
-    # TODO: Call agent
-    # result = await agent.run(state)
+    try:
+        # Get LLM service (uses mock in dry run, real in production)
+        llm_service = _get_llm_service()
+        
+        # Instantiate and run triage agent
+        agent = TriageAgent(llm_service=llm_service)
+        result = await agent.process(state)
+        
+        # Update state with agent output
+        state["triage_output"] = result
+        
+        # Check for errors that should route to error node
+        if not result.get("success", True):
+            state["error"] = result.get("result", {}).get("error", "Triage failed")
+            state["error_step"] = "triage"
+        
+    except Exception as e:
+        # Triage failed - record error and continue to error handling
+        state["triage_output"] = {
+            "success": False,
+            "agent_type": "triage",
+            "error": str(e),
+        }
+        state["error"] = str(e)
+        state["error_step"] = "triage"
+        print(f"Triage agent error: {e}")
     
-    # TODO: Update state with result
-    # state["triage_output"] = result
-    
-    # TODO: Return updated state
     return state
+
+
+# Module-level LLM service for dependency injection
+_llm_service_override = None
+
+
+def set_llm_service(service):
+    """Set LLM service for testing/dry run."""
+    global _llm_service_override
+    _llm_service_override = service
+
+
+def _get_llm_service():
+    """Get LLM service (allows override for testing)."""
+    global _llm_service_override
+    if _llm_service_override is not None:
+        return _llm_service_override
+    # Default: return None, let agent use its default
+    return None
+
 
 
 async def knowledge_node(state: TicketProcessingState) -> TicketProcessingState:
@@ -280,24 +321,43 @@ async def human_review_node(state: TicketProcessingState) -> TicketProcessingSta
     - Retrieved documents (with citations)
     - Decision recommendation with reasoning
     - Risk flags
+    
+    NOTE: This node may be reached via:
+    - Normal flow (after decision) - decision_output present
+    - Escalation path (after triage) - decision_output is None
     """
     state["current_step"] = "human_review"
     state["status"] = "paused_for_human"
     state["updated_at"] = datetime.utcnow().isoformat()
     
     # Build summary for human operator
-    decision_output = state.get("decision_output", {})
-    decision_result = decision_output.get("result", {})
+    # Handle both normal path (has decision) and escalation path (no decision)
+    decision_output = state.get("decision_output") or {}
+    decision_result = decision_output.get("result", {}) if decision_output else {}
+    
+    # For escalation path, use triage info
+    triage_output = state.get("triage_output") or {}
+    triage_result = triage_output.get("result", {}) if triage_output else {}
+    
+    # Determine what to show
+    if decision_result:
+        recommended_action = decision_result.get("recommended_action", "unknown")
+        confidence = decision_output.get("confidence", 0)
+        risk_flags = decision_result.get("risk_flags", [])
+        reasoning = decision_result.get("reasoning_summary", "No reasoning")
+    else:
+        # Escalation path - use triage info
+        recommended_action = "escalate" if triage_result.get("requires_escalation") else "review"
+        confidence = triage_output.get("confidence", 0)
+        risk_flags = triage_result.get("escalation_reasons", [])
+        reasoning = f"Escalated from triage: {', '.join(risk_flags)}" if risk_flags else "Immediate escalation required"
     
     # Log checkpoint event for observability
-    # TODO: Emit notification to operator dashboard
-    # TODO: Record time spent waiting for human
-    
     print(f"[HUMAN REVIEW REQUIRED] Ticket: {state.get('ticket_id')}")
-    print(f"  Recommended action: {decision_result.get('recommended_action', 'unknown')}")
-    print(f"  Confidence: {decision_output.get('confidence', 0):.2f}")
-    print(f"  Risk flags: {decision_result.get('risk_flags', [])}")
-    print(f"  Reasoning: {decision_result.get('reasoning_summary', 'No reasoning')}")
+    print(f"  Recommended action: {recommended_action}")
+    print(f"  Confidence: {confidence:.2f}" if isinstance(confidence, (int, float)) else f"  Confidence: {confidence}")
+    print(f"  Risk flags: {risk_flags}")
+    print(f"  Reasoning: {reasoning}")
     
     # TODO: Integrate with notification service
     # from observability.events import emit_human_review_required

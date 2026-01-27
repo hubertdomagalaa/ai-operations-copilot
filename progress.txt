@@ -5,6 +5,70 @@ Read this file at the start of each session to understand current state.
 
 ---
 
+## Session 10 — 2026-01-27 — Full Dry Run Verification (MILESTONE)
+
+### Completed
+- Executed full end-to-end workflow dry run with 3 test scenarios
+- All scenarios passed verification:
+  - Scenario A (ticket_006): Full flow completed with approval
+  - Scenario B (ticket_020): Escalated on low confidence (0.65) + P2 severity
+  - Scenario C (incident): Escalated on P1 severity + production outage
+- Implemented `triage_node` in `/orchestration/langgraph/nodes.py`
+- Fixed `human_review_node` to handle escalation path (no decision_output)
+- Fixed `route_after_triage` to check result dict for requires_escalation
+- Created mock LLM service at `/tests/mocks/llm_service.py`
+- Created dry run test script at `/tests/dry_run_workflow.py`
+- Created synthetic incident ticket at `/tests/fixtures/incident_ticket.json`
+
+### What This Proves
+- State flows correctly through all nodes
+- Routing logic works for both normal and escalation paths
+- Agent contracts are honored (schema validation passes)
+- Human-in-the-loop checkpoints function correctly
+- Workflow can pause and resume after approval
+
+### What This Does NOT Prove
+- LLM text quality (mock responses used)
+- RAG retrieval relevance (no docs indexed yet)
+- Production-scale performance
+
+### Definition of Done: VERIFIED
+All criteria from the verification plan have been met.
+
+---
+
+## Session 9 — 2026-01-27 — TriageAgent Implementation
+
+### Completed
+- Designed and finalized TriageAgent prompt and schema
+- Created `/agents/triage/schema.py`:
+  - `TriageOutput`: Main output schema (14 fields)
+  - `ConfidenceFactors`: Classification confidence breakdown
+  - `TechnicalSignals`: Extracted technical details
+  - `TriageReasoning`: Structured reasoning with facts/inferences
+- Created `/agents/triage/prompts.py`:
+  - Production-ready system prompt with calibration guide
+  - User prompt template with ticket JSON injection
+  - Prompt versioning for evaluation tracking
+- Implemented `/agents/triage/__init__.py`:
+  - Full `TriageAgent.process()` method
+  - LLM service integration
+  - Post-LLM escalation rule enforcement
+  - Error handling with escalation fallback
+
+### Key Design Decisions
+- Confidence below 0.70 triggers automatic escalation
+- secondary_category null in 90% of cases (explicit suppression)
+- Incident issue_type always requires human review
+- Keyword-based escalation checked post-LLM as safety net
+
+### Remaining for Full Operation
+- Implement real LLM provider (OpenAI/Anthropic)
+- Test with production traffic
+- Collect labeled data for calibration
+
+---
+
 ## Session 8 — 2026-01-25 — Quality Management Infrastructure
 
 ### Completed
@@ -91,7 +155,8 @@ Read this file at the start of each session to understand current state.
 
 ## Next Steps
 
-1. Implement TriageAgent with LLM classification
-2. Create labeled evaluation datasets
-3. Implement evaluator scoring logic
+1. Implement real LLM provider (OpenAI or Anthropic)
+2. Index knowledge base documents for RAG retrieval
+3. Create labeled evaluation datasets (50+ tickets)
 4. Add notification service for human review alerts
+5. Build simple operator dashboard for approval workflow

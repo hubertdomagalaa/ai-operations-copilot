@@ -1,0 +1,26 @@
+{
+  "ticket_id": "test_incident_001",
+  "source": "internal",
+  "product": "REST API",
+  "category": "performance",
+  "issue_type": "incident",
+  "severity": "critical",
+  "environment": "production",
+  "summary": "Production API returning 500 errors for all users",
+  "symptoms": [
+    "500 error on all endpoints",
+    "Service unavailable",
+    "Production outage affecting all customers"
+  ],
+  "suspected_root_cause": "Unknown - requires immediate investigation",
+  "affected_components": [
+    "API Gateway",
+    "Auth Service"
+  ],
+  "reproducible": true,
+  "has_code_example": false,
+  "resolution_known": false,
+  "resolution_type": null,
+  "related_versions": {},
+  "raw_reference": null
+}

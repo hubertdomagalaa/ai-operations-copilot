@@ -25,18 +25,27 @@ def route_after_triage(state: TicketProcessingState) -> str:
     Options:
     - "knowledge" — Continue to knowledge retrieval
     - "escalate" — Skip to human for immediate escalation
-    
-    TODO: Implement routing logic
+    - "error" — Triage failed
     """
     triage_output = state.get("triage_output", {})
-    
-    # Check if immediate escalation needed
-    if triage_output.get("requires_escalation", False):
-        return "escalate"
     
     # Check if triage failed
     if state.get("error"):
         return "error"
+    
+    if not triage_output.get("success", True):
+        return "error"
+    
+    # Check if immediate escalation needed
+    # The TriageAgent puts requires_escalation in result dict
+    triage_result = triage_output.get("result", {})
+    if triage_result.get("requires_escalation", False):
+        return "escalate"
+    
+    # Also check top-level requires_human_review
+    if triage_output.get("requires_human_review", False):
+        # Continue to knowledge but flag for later review
+        pass
     
     # Normal flow continues to knowledge
     return "knowledge"
