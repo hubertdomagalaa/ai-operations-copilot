@@ -5,7 +5,7 @@ LLM Service Abstraction
 Provides a unified interface for LLM interactions.
 
 WHY THIS FILE EXISTS:
-- Abstracts LLM provider differences (OpenAI, Anthropic, local)
+- Abstracts LLM provider differences (OpenAI, Anthropic, OpenRouter, local)
 - Enables provider switching without code changes
 - Centralizes prompt management and response parsing
 - Supports structured output via response schemas
@@ -16,40 +16,45 @@ USAGE:
     llm = get_llm_service()
     response = await llm.generate(prompt="...", schema=OutputSchema)
 
-DESIGN DECISIONS:
-- Provider is configured via environment variable
-- All prompts are logged for observability
-- Responses include token usage for cost tracking
-- Structured outputs preferred via LangChain
+CONFIGURATION:
+    LLM_PROVIDER: mock, openrouter
+    OPENROUTER_API_KEY: API key for OpenRouter
+    LLM_MODEL: Model identifier
+    LLM_TEMPERATURE: Temperature setting
 """
 
-from typing import Optional, Dict, Any, Protocol, TypeVar
+import os
+import logging
+from typing import Optional, Dict, Any, TypeVar
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
+
+logger = logging.getLogger(__name__)
 
 T = TypeVar('T')
 
 
+@dataclass
 class LLMResponse:
     """
     Standardized LLM response wrapper.
     
     Includes content, token usage, and metadata.
     """
-    
     content: str
     structured_output: Optional[Dict[str, Any]] = None
     
     # Token usage for cost tracking
-    input_tokens: int
-    output_tokens: int
-    total_tokens: int
+    input_tokens: int = 0
+    output_tokens: int = 0
+    total_tokens: int = 0
     
     # Model info
-    model: str
-    provider: str
+    model: str = ""
+    provider: str = ""
     
     # Timing
-    latency_ms: int
+    latency_ms: int = 0
 
 
 class LLMService(ABC):
@@ -69,8 +74,6 @@ class LLMService(ABC):
     ) -> LLMResponse:
         """
         Generate a text response from the LLM.
-        
-        TODO: Implement in provider-specific subclass
         """
         pass
     
@@ -84,9 +87,7 @@ class LLMService(ABC):
         """
         Generate a structured response matching the schema.
         
-        Uses LangChain's structured output capabilities.
-        
-        TODO: Implement in provider-specific subclass
+        Uses prompt engineering or native structured output.
         """
         pass
 
@@ -106,8 +107,11 @@ class MockLLMService(LLMService):
         max_tokens: int = 1000,
     ) -> LLMResponse:
         """Return a mock response."""
-        # TODO: Implement mock logic
-        raise NotImplementedError("Mock not implemented")
+        return LLMResponse(
+            content="Mock response - no real LLM call made",
+            provider="mock",
+            model="mock",
+        )
     
     async def generate_structured(
         self,
@@ -116,18 +120,52 @@ class MockLLMService(LLMService):
         system_prompt: Optional[str] = None,
     ) -> LLMResponse:
         """Return a mock structured response."""
-        # TODO: Implement mock logic
-        raise NotImplementedError("Mock not implemented")
+        return LLMResponse(
+            content="{}",
+            structured_output={},
+            provider="mock",
+            model="mock",
+        )
 
 
-def get_llm_service() -> LLMService:
+# === Provider Detection ===
+
+def get_llm_service(provider: Optional[str] = None) -> LLMService:
     """
     Factory function to get the configured LLM service.
     
-    Reads provider from config and returns appropriate implementation.
+    Reads provider from env or argument and returns appropriate implementation.
     
-    TODO: Implement provider detection and instantiation
+    Args:
+        provider: Override provider (default: from LLM_PROVIDER env var)
+        
+    Returns:
+        LLMService implementation
     """
-    # TODO: Read from config.settings.llm_provider
-    # TODO: Return appropriate implementation
-    return MockLLMService()
+    provider = provider or os.getenv("LLM_PROVIDER", "mock")
+    provider = provider.lower()
+    
+    logger.info(f"Getting LLM service for provider: {provider}")
+    
+    if provider == "openrouter":
+        from backend.services.llm.openrouter import OpenRouterLLMService
+        return OpenRouterLLMService()
+    
+    elif provider == "mock":
+        return MockLLMService()
+    
+    else:
+        logger.warning(f"Unknown LLM provider '{provider}', using mock")
+        return MockLLMService()
+
+
+def is_shadow_mode() -> bool:
+    """
+    Check if shadow mode is enabled.
+    
+    Shadow mode:
+    - Enables real LLM calls for TriageAgent
+    - Prevents downstream agents from executing
+    - For testing/observation only
+    """
+    return os.getenv("SHADOW_MODE", "false").lower() in ("true", "1", "yes")

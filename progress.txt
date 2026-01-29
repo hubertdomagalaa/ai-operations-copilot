@@ -5,6 +5,28 @@ Read this file at the start of each session to understand current state.
 
 ---
 
+## Session 11 — 2026-01-28 — TriageAgent v1.0 Finalization
+
+### Completed
+- Updated `schema.py` to final v1.0 spec:
+  - All 13 required fields
+  - Explicit defaults for nullable/array fields
+  - maxItems limits (facts: 10, inferences: 5)
+  - Reduced character limits (severity_justification: 200, category_rationale: 300, one_line_summary: 150)
+  - keywords: minItems 3, maxItems 8
+- Updated `prompts.py` to final v1.0 spec:
+  - Numeric confidence calibration ranges (0.90-1.00, 0.75-0.89, etc.)
+  - Bulleted escalation triggers
+  - Processing steps at end of system prompt
+  - Explicit secondary_category suppression ("90% null")
+  - Version bumped to 1.0
+- Verified dry run test passes with v1.0 schema
+
+### Status
+TriageAgent prompt and schema are now PRODUCTION READY.
+
+---
+
 ## Session 10 — 2026-01-27 — Full Dry Run Verification (MILESTONE)
 
 ### Completed

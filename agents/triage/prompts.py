@@ -1,19 +1,24 @@
 """
-Triage Agent Prompts
-====================
+TriageAgent Prompts — FINAL v1.0
+=================================
 
-System prompt and user prompt templates for the TriageAgent.
+Date: January 28, 2026
+Status: Production Ready
 
-These prompts are versioned and should be tracked for evaluation.
+System and user prompt templates for TriageAgent LLM calls.
+
+PROMPT VERSION: 1.0 (FINAL)
 """
 
-import json
 from typing import Dict, Any
+import json
 
 
-# Version identifier for prompt tracking
+# === Prompt Version ===
 PROMPT_VERSION = "1.0"
 
+
+# === System Prompt (FINAL) ===
 
 SYSTEM_PROMPT = """You are a support ticket triage specialist for a B2B SaaS company providing a REST API for user management and authentication. Analyze incoming tickets and produce structured classification output.
 
@@ -57,6 +62,7 @@ SYSTEM_PROMPT = """You are a support ticket triage specialist for a B2B SaaS com
 === CATEGORY TAXONOMY ===
 
 Choose exactly ONE primary category:
+
 - validation: Pydantic models, form handling, request/response validation, type checking
 - middleware: CORS, GZip, exception handlers, request pipeline, trusted hosts
 - async_concurrency: async/await, threading, connection pooling, race conditions
@@ -88,6 +94,7 @@ Choose exactly ONE primary category:
 === CONFIDENCE CALIBRATION ===
 
 Assign confidence based on signal clarity:
+
 - 0.90-1.00: Single obvious category, specific symptoms, technical details present, no ambiguity
 - 0.75-0.89: Clear category with minor ambiguity, good symptom detail
 - 0.60-0.74: Moderate ambiguity, could be 2 categories, requires escalation
@@ -108,12 +115,16 @@ IMPORTANT: Confidence below 0.70 automatically triggers requires_escalation=true
 8. Output structured JSON"""
 
 
+# === User Prompt Template (FINAL) ===
+
 USER_PROMPT_TEMPLATE = """Analyze the following support ticket and produce a structured triage classification.
 
 === TICKET DATA ===
+
 {ticket_json}
 
 === INSTRUCTIONS ===
+
 1. Read all fields: ticket_id, summary, symptoms, affected_components, severity
 2. Classify into exactly ONE primary category
 3. Set secondary_category=null unless two distinct areas are equally involved
@@ -124,29 +135,39 @@ USER_PROMPT_TEMPLATE = """Analyze the following support ticket and produce a str
 8. Provide grounded reasoning with facts from the ticket
 
 === OUTPUT ===
+
 Respond with a single JSON object matching the TriageOutput schema.
 No text before or after the JSON."""
 
 
+# === Helper Functions ===
+
+def build_system_prompt() -> str:
+    """
+    Get the system prompt for TriageAgent.
+    
+    Returns the complete system prompt with all constraints,
+    taxonomy, and calibration guidance.
+    """
+    return SYSTEM_PROMPT
+
+
 def build_user_prompt(ticket_data: Dict[str, Any]) -> str:
     """
-    Build the user prompt with ticket data inserted.
+    Build the user prompt with ticket data injected.
     
     Args:
         ticket_data: Normalized ticket dictionary
         
     Returns:
-        Complete user prompt string
+        Complete user prompt with ticket JSON
     """
-    ticket_json = json.dumps(ticket_data, indent=2, ensure_ascii=False)
+    # Format ticket as indented JSON for readability
+    ticket_json = json.dumps(ticket_data, indent=2, default=str)
+    
     return USER_PROMPT_TEMPLATE.format(ticket_json=ticket_json)
 
 
-def get_prompts() -> tuple[str, str]:
-    """
-    Get the system and user prompt templates.
-    
-    Returns:
-        Tuple of (system_prompt, user_prompt_template)
-    """
-    return SYSTEM_PROMPT, USER_PROMPT_TEMPLATE
+def get_prompt_version() -> str:
+    """Get current prompt version for tracking."""
+    return PROMPT_VERSION
